@@ -41,3 +41,25 @@ def login():
         if data.get('email') == 'admin@example.com' and data.get('password') == 'password':
             return jsonify({"status": "success", "token": "mock-jwt-token"}), 200
         return jsonify({"status": "error", "message": "Invalid credentials (Mock)"}), 401
+
+@auth_bp.route('/me', methods=['GET'])
+def get_me():
+    token = request.headers.get('Authorization')
+    if not token:
+        return jsonify({"status": "error", "message": "No token provided"}), 401
+    
+    # In a real app, decode JWT and find user in DB
+    # For now, we'll return a mock "Explorer" user
+    return jsonify({
+        "status": "success",
+        "user": {
+            "name": "Explorer",
+            "email": "explorer@neurolearn.com",
+            "role": "student",
+            "progress": {
+                "activities_completed": 12,
+                "focus_score": 90,
+                "rank": "Lvl 5"
+            }
+        }
+    })
